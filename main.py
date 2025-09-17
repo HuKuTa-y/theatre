@@ -1,9 +1,9 @@
 from database import DatabaseConfig, DatabaseConnection
 from migrations import MigrationManager
-from repository import ticketRepository
-from service import ticketService
+from repository import TicketRepository
+from service import TicketService
 from fastapi import FastAPI, HTTPException
-from ticket import ticket
+from ticket import Ticket
 
 # Initialize
 ## DB config
@@ -19,11 +19,11 @@ db_connection = DatabaseConnection(db_config)
 migration_manager = MigrationManager(db_config)
 migration_manager.create_tables()
 # Repository and Service
-repository = ticketRepository(db_connection)
-service = ticketService(repository)
+repository = TicketRepository(db_connection)
+service = TicketService(repository)
 
 app = FastAPI(
-    title="ticket API"
+    title="Ticket API"
 )
 
 
@@ -37,61 +37,43 @@ async def get_tickets():
     try:
         return service.get_all()
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"Ошибка при получении полётов: {str(e)}")
+        return HTTPException(status_code=500, detail=f"Ошибка при получении билета: {str(e)}")
 
 @app.get("/tickets/{ticket_id}")
 async def get_ticket_by_id(ticket_id: int):
     try:
         ticket = service.get_by_id(ticket_id)
         if not ticket:
-            raise HTTPException(status_code=404, detail="Полёт не найден")
+            raise HTTPException(status_code=404, detail="Билет не найден")
         return ticket
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка при получении полёта: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при получении билета: {str(e)}")
 
 
 @app.post("/tickets")
 async def create_ticket(ticket_data: dict):
     try:
         # Validation
-        required_fields = ["price", "plane"]
+        required_fields = ["row", "place", "name_movie", "price"]
         for field in required_fields:
             if field not in ticket_data:
                 raise HTTPException(status_code=400, detail=f"Отсутствует обязательное поле {field}")
 
-        ticket = ticket(
-            price=ticket_data['price'],
-            plane=ticket_data['plane']
+        ticket = Ticket(
+            row=ticket_data['row'],
+            place=ticket_data['place'],
+            name_movie=ticket_data['name_movie'],
+            price=ticket_data['price']
         )
 
         created_ticket = service.create_ticket(ticket)
         return created_ticket
 
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"Ошибка при добавлении полёта: {str(e)}")
+        return HTTPException(status_code=500, detail=f"Ошибка при добавлении билета: {str(e)}")
 
-@app.put("/tickets/{ticket_id}")
-async def update_ticket(ticket_id: int, ticket_data: dict):
-    try:
-        # Проверка наличия данных для обновления
-        if not ticket_data:
-            raise HTTPException(status_code=400, detail="Нет данных для обновления")
-        # Создаем объект ticket с обновленными данными
-        ticket = ticket(
-            id=ticket_id,
-            price=ticket_data.get('price'),
-            plane=ticket_data.get('plane')
-        )
-        updated_ticket = service.update_ticket(ticket_id, ticket)
-        if not updated_ticket:
-            raise HTTPException(status_code=404, detail="Полёт не найден для обновления")
-        return updated_ticket
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка при обновлении полёта: {str(e)}")
 
 
 @app.delete("/tickets/{ticket_id}")
@@ -99,12 +81,12 @@ async def delete_ticket(ticket_id: int):
     try:
         result = service.delete_ticket(ticket_id)
         if not result:
-            raise HTTPException(status_code=404, detail="Полёт не найден для удаления")
-        return {"message": "Полёт успешно удалён"}
+            raise HTTPException(status_code=404, detail="Билет не найден для удаления")
+        return {"message": "Билет успешно удалён"}
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка при удалении полёта: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при удалении билета: {str(e)}")
 
 
 if __name__ == "__main__":

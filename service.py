@@ -1,12 +1,12 @@
-from repository import ticketRepository
-from ticket import ticket
+from repository import TicketRepository
+from ticket import Ticket
 
 
-class ticketService:
-    def __init__(self, repository: ticketRepository):
+class TicketService:
+    def __init__(self, repository: TicketRepository):
         self.repository = repository
 
-    def create_ticket(self, ticket: ticket):
+    def create_ticket(self, ticket: Ticket):
         """Добавление рейса"""
         return self.repository.create_ticket(ticket)
 
@@ -18,7 +18,7 @@ class ticketService:
         '''Получить полёт по id'''
         return self.repository.get_by_id(ticket_id)
 
-    def update_ticket(self, ticket: ticket):
+    def update_ticket(self, ticket: Ticket):
         """Изменить существующий рейс.
             Если рейса не существует, ничего не делать."""
         return self.repository.update_ticket(ticket)
