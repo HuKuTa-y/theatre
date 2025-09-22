@@ -1,4 +1,4 @@
-from server.database import DatabaseConfig, DatabaseConnection
+from database import DatabaseConfig, DatabaseConnection
 
 
 class MigrationManager:
