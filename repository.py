@@ -1,5 +1,5 @@
-from server.ticket import Ticket
-from server.database import DatabaseConnection
+from ticket import Ticket
+from database import DatabaseConnection
 
 
 class TicketRepository:
