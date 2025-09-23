@@ -16,7 +16,7 @@ class TicketRepository:
 
         cursor.execute('''
             INSERT INTO tickets
-                        (plane,price, name_movie, price)
+                        (row, place, name_movie, price)
                         VALUES (%s,%s,%s,%s)
             ''', (ticket.row, ticket.place, ticket.name_movie, ticket.price ))
         conn.commit()
