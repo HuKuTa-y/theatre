@@ -7,23 +7,23 @@ class TicketService:
         self.repository = repository
 
     def create_ticket(self, ticket: Ticket):
-        """Добавление рейса"""
+        """Добавление билета"""
         return self.repository.create_ticket(ticket)
 
     def get_all(self):
-        '''Получить все полёты'''
+        '''Получить все билеты'''
         return self.repository.get_all()
 
     def get_by_id(self, ticket_id: int):
-        '''Получить полёт по id'''
+        '''Получить билет по id'''
         return self.repository.get_by_id(ticket_id)
 
     def update_ticket(self, ticket: Ticket):
-        """Изменить существующий рейс.
-            Если рейса не существует, ничего не делать."""
+        """Изменить существующий билет.
+            Если билета не существует, ничего не делать."""
         return self.repository.update_ticket(ticket)
 
     def delete_ticket(self, ticket_id: int):
-        """Удалить существующий рейс.
-            Если рейса не существует, ничего не делать."""
+        """Удалить существующий билет.
+            Если билета не существует, ничего не делать."""
         return self.repository.delete_ticket(ticket_id)
