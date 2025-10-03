@@ -3,12 +3,12 @@ from migrations import MigrationManager
 from repository import TicketRepository
 from service import TicketService
 from fastapi import FastAPI, HTTPException
-from ticket import Ticket
+from law import Category, Source, Subsections, Users
 
 # Initialize
 ## DB config
 db_config = DatabaseConfig(
-    'Nazarov',
+    'Law',
     '192.168.133.20',
     'postgres',
     '123Secret_a',
