@@ -14,14 +14,38 @@ class MigrationManager:
 
         # Execution
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS tickets(
+            CREATE TABLE IF NOT EXISTS category(
                         id SERIAL PRIMARY KEY,
-                        row DECIMAL(10,2) NOT NULL,
-                        place DECIMAL(10,2) NOT NULL,
-                        name_movie VARCHAR(100) NOT NULL,
-                        price DECIMAL(10, 2) NOT NULL
+                        name VARCHAR(100) NOT NULL,
+                        content TEXT NOT NULL
                         )
             ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS subsections(
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(100) NOT NULL,
+                       content TEXT NOT NULL,
+                       link VARCHAR(255) NOT NULL
+                       )
+            ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS sources(
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(100) NOT NULL,
+                       link VARCHAR(255) NOT NULL
+                       )
+            ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users(
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(100) NOT NULL,
+                       id_chat DECIMAL(10, 0)
+                       )
+            ''')
+        
         conn.commit()
 
         # Deinitialize
