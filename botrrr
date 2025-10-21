@@ -1,0 +1,42 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+
+url = 'https://www.consultant.ru/'  # ваш URL
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+}
+
+response = requests.get(url, headers=headers)
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'html.parser')
+    ul_lists = soup.find_all('ul', class_='useful-links__list_dashed')
+
+    results = []
+
+    total_ul = len(ul_lists)
+
+    for index, ul in enumerate(ul_lists):
+        # Пропускаем последний список
+        if index == total_ul - 1:
+            continue
+
+        for li in ul.find_all('li'):
+            a = li.find('a')
+            if a:
+                title_raw = a.get_text()
+                title_clean = title_raw.replace('\xa0', ' ').strip()
+                link = a['href']
+                results.append({
+                    'Название': title_clean,
+                    'Ссылка': link
+                })
+
+    # Сохраняем в JSON файл
+    with open('result.json', 'w', encoding='utf-8') as json_file:
+        json.dump(results, json_file, ensure_ascii=False, indent=4)
+
+    print('Данные успешно сохранены в файл result.json')
+else:
+    print(f'Ошибка при загрузке страницы: {response.status_code}')
